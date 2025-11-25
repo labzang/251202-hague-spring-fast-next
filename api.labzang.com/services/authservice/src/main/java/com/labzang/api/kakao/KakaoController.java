@@ -8,8 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth/kakao")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/auth/kakao")
 public class KakaoController {
 
     @GetMapping("/callback")
@@ -28,6 +27,8 @@ public class KakaoController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> kakaoLogin(@RequestBody(required = false) Map<String, Object> request) {
+        System.out.println("😎😎😎😎😎😎 카카오 로그인 진입 " + request);
+
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "카카오 로그인 성공");
