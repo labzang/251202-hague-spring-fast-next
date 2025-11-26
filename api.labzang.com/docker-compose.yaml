@@ -23,6 +23,10 @@ services:
       - spring-network
     environment:
       - SPRING_PROFILES_ACTIVE=default
+      - KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY}
+      - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-86400000}
 
   # User Service
   userservice:

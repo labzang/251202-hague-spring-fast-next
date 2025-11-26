@@ -2,6 +2,14 @@ spring:
   application:
     name: authservice
 
+kakao:
+  rest-api-key: ${KAKAO_REST_API_KEY}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
+  
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:86400000} # 기본 24시간
+
 server:
   port: 8081
 
