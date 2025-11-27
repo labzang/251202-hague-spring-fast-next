@@ -9,6 +9,8 @@ spring:
       import-check:
         enabled: false
     gateway:
+      default-filters:
+        - AddRequestHeader=X-Gateway-Request, Gateway-Request
       routes:
         - id: auth-service-route
           uri: http://authservice:8081
@@ -16,6 +18,13 @@ spring:
             - Path=/api/auth/**
           filters:
             - RewritePath=/api/auth/(?<segment>.*), /${segment}
+
+        - id: oauth2-kakao-route
+          uri: http://authservice:8081
+          predicates:
+            - Path=/oauth2/kakao/**
+          filters:
+            - RewritePath=/oauth2/kakao/(?<segment>.*), /kakao/${segment}
 
         - id: user-service-route
           uri: http://userservice:8082

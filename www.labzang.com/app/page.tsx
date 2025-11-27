@@ -7,51 +7,42 @@ export default function Home() {
   };
 
   const handleKakaoLogin = async () => {
-    // 카카오 로그인 로직 추가
+    // 카카오 로그인 시작: 인증 URL 가져오기
     try {
-      const data = await callGateway();
-      console.log("카카오 로그인 성공:", data);
+      // 프론트엔드 콜백 URL을 파라미터로 전달
+      const frontendCallbackUrl = `${window.location.origin}/kakao-callback`;
+      const response = await fetch(`http://localhost:8080/oauth2/kakao/auth-url?redirect_uri=${encodeURIComponent(frontendCallbackUrl)}`);
+
+      // HTTP 응답 상태 확인
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => '');
+        console.error('HTTP 에러:', response.status, response.statusText, errorText);
+        alert(`서버 오류가 발생했습니다 (${response.status}). 백엔드 서버가 실행 중인지 확인해주세요.`);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('API 응답:', data);
+
+      if (data.success && data.auth_url) {
+        // 카카오 인가 페이지로 리다이렉트
+        window.location.href = data.auth_url;
+      } else {
+        const errorMessage = data.message || '알 수 없는 오류';
+        console.error('인증 URL 가져오기 실패:', errorMessage, '전체 응답:', data);
+        alert('카카오 로그인을 시작할 수 없습니다: ' + errorMessage);
+      }
     } catch (error) {
       console.error("카카오 로그인 실패:", error);
+
+      // 네트워크 에러인 경우
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        alert('백엔드 서버(localhost:8080)에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.');
+      } else {
+        alert('카카오 로그인 중 오류가 발생했습니다: ' + (error instanceof Error ? error.message : String(error)));
+      }
     }
   };
-
-  async function callGateway() {
-    // Next.js API 라우트를 통해 프록시 (CORS 문제 해결)
-    const apiUrl = "http://localhost:8080/api/auth/kakao/login";
-
-    try {
-      console.log("API 호출 시작:", apiUrl);
-
-      const res = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({}), // 빈 객체 전송 (required = false이므로)
-      });
-
-      console.log("응답 상태:", res.status, res.statusText);
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: "알 수 없는 오류" }));
-        const errorMessage = errorData.error || `HTTP ${res.status} ${res.statusText}`;
-        console.error("API 에러:", errorMessage);
-        throw new Error(errorMessage);
-      }
-
-      const data = await res.json();
-      console.log("API 응답 성공:", data);
-      return data;
-    } catch (error) {
-      console.error("API 호출 실패:", error);
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error("알 수 없는 오류가 발생했습니다.");
-    }
-  }
 
   const handleNaverLogin = () => {
     // 네이버 로그인 로직 추가

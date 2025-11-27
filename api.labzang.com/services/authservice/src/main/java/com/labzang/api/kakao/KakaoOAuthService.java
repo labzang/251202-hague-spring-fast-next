@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Service
 public class KakaoOAuthService {
-    @Value("${kakao.client-id}")
+    @Value("${kakao.rest-api-key}")
     private String clientId;
 
     @Value("${kakao.client-secret:}")

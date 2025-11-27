@@ -8,7 +8,8 @@ kakao:
   
 jwt:
   secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION:86400000} # 기본 24시간
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600000} # 기본 1시간
+  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:2592000000} # 기본 30일
 
 server:
   port: 8081
