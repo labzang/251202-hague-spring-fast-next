@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # 프로젝트 루트 경로 설정
 project_root = Path(__file__).parent.parent.parent
-clawler_main_path = project_root / "services" / "clawler-service" / "app" / "main.py"
+clawler_main_path = project_root / "services" / "clawlerservice" / "app" / "main.py"
 
 # clawler-service의 라우터 동적 import
 spec = importlib.util.spec_from_file_location("clawler_main", clawler_main_path)
