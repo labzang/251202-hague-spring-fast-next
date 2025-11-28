@@ -214,8 +214,8 @@ public class KakaoController {
             System.out.println("카카오 API로 Access Token 요청 중...");
             Map<String, Object> kakaoTokenResponse = kakaoOAuthService.getAccessToken(code);
             String kakaoAccessToken = (String) kakaoTokenResponse.get("access_token");
-            // kakaoRefreshToken은 필요시 사용 가능
-            // String kakaoRefreshToken = (String) kakaoTokenResponse.get("refresh_token");
+            String kakaoRefreshToken = (String) kakaoTokenResponse.get("refresh_token");
+            Object expiresIn = kakaoTokenResponse.get("expires_in"); // 초 단위
 
             if (kakaoAccessToken == null) {
                 response.put("success", false);
@@ -228,15 +228,26 @@ public class KakaoController {
             Map<String, Object> kakaoUserInfo = kakaoOAuthService.getUserInfo(kakaoAccessToken);
             Map<String, Object> userInfo = kakaoOAuthService.extractUserInfo(kakaoUserInfo);
 
-            // 5. JWT 토큰 생성
+            // 5. 사용자 ID 추출
             String userId = userInfo.get("kakao_id").toString();
+
+            // 6. 카카오 OAuth 원본 토큰을 Redis에 저장
+            long kakaoTokenExpireTime = expiresIn != null ? Long.parseLong(expiresIn.toString()) : 21600; // 기본 6시간 (카카오 기본값)
+            tokenService.saveOAuthAccessToken("kakao", userId, kakaoAccessToken, kakaoTokenExpireTime);
+            
+            if (kakaoRefreshToken != null) {
+                // Refresh Token은 60일 유효 (카카오 기본값)
+                tokenService.saveOAuthRefreshToken("kakao", userId, kakaoRefreshToken, 5184000);
+            }
+
+            // 7. JWT 토큰 생성 (자체 JWT)
             String jwtAccessToken = jwtTokenProvider.generateAccessToken(userId, "kakao", userInfo);
             String jwtRefreshToken = jwtTokenProvider.generateRefreshToken(userId, "kakao");
 
             System.out.println("✅ JWT 토큰 생성 완료 - AccessToken: "
                     + jwtAccessToken.substring(0, Math.min(50, jwtAccessToken.length())) + "...");
 
-            // 6. Redis에 토큰 저장 (Access Token: 1시간, Refresh Token: 30일)
+            // 8. JWT 토큰을 Redis에 저장 (Access Token: 1시간, Refresh Token: 30일)
             System.out.println("Redis에 토큰 저장 중...");
             tokenService.saveAccessToken("kakao", userId, jwtAccessToken, 3600);
             tokenService.saveRefreshToken("kakao", userId, jwtRefreshToken, 2592000);

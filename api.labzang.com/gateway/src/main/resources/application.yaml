@@ -9,6 +9,16 @@ spring:
       import-check:
         enabled: false
     gateway:
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 30s
+        pool:
+          max-connections: 1000
+          max-idle-time: 30s
+      loadbalancer:
+        cache:
+          enabled: true
+          ttl: 35s
       default-filters:
         - AddRequestHeader=X-Gateway-Request, Gateway-Request
       routes:

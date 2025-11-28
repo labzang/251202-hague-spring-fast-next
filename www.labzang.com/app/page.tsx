@@ -1,9 +1,37 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { handleGoogleLogin, handleKakaoLogin, handleNaverLogin } from '@/service/mainservice';
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  useEffect(() => {
+    // 구글 로그인 콜백 처리 (백엔드에서 토큰과 함께 리다이렉트)
+    const token = searchParams.get('token');
+    const refreshToken = searchParams.get('refresh_token');
+    const error = searchParams.get('error');
+    const errorDescription = searchParams.get('error_description');
+
+    if (token) {
+      // JWT 토큰 저장
+      localStorage.setItem('access_token', token);
+      if (refreshToken) {
+        localStorage.setItem('refresh_token', refreshToken);
+      }
+
+      console.log('구글 로그인 성공, 토큰 저장 완료');
+      
+      // 대시보드로 리다이렉트
+      router.push('/dashboard/google');
+    } else if (error) {
+      // 에러 처리
+      console.error('구글 로그인 에러:', error, errorDescription);
+      alert(`구글 로그인 실패: ${error}${errorDescription ? ` - ${errorDescription}` : ''}`);
+    }
+  }, [searchParams, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white font-sans">
@@ -77,9 +105,4 @@ export default function Home() {
       </main>
     </div>
   );
- 
-
-
-
-
 }

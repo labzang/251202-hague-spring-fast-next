@@ -11,6 +11,10 @@ services:
       - spring-network
     environment:
       - SPRING_PROFILES_ACTIVE=default
+    depends_on:
+      - authservice
+      - userservice
+    restart: on-failure
 
   authservice:
     build:
@@ -25,9 +29,32 @@ services:
       - SPRING_PROFILES_ACTIVE=default
       - KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY}
       - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ACCESS_TOKEN_EXPIRATION=${JWT_ACCESS_TOKEN_EXPIRATION:-3600000}
       - JWT_REFRESH_TOKEN_EXPIRATION=${JWT_REFRESH_TOKEN_EXPIRATION:-2592000000}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-false}
+    depends_on:
+      - redis
+    restart: on-failure
+
+  # Redis 서버 (로컬 개발용)
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - spring-network
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: on-failure
 
   # User Service
   userservice:
@@ -41,6 +68,7 @@ services:
       - spring-network
     environment:
       - SPRING_PROFILES_ACTIVE=default
+    restart: on-failure
 
 networks:
   spring-network:
@@ -48,3 +76,4 @@ networks:
 
 volumes:
   postgres-data:
+  redis-data:

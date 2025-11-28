@@ -108,4 +108,71 @@ public class TokenService {
         }
         return null;
     }
+
+    /**
+     * OAuth 제공자 원본 Access Token 저장 (구글, 카카오 등에서 받은 토큰)
+     * 
+     * @param provider    소셜 로그인 제공자 (kakao, naver, google)
+     * @param userId      사용자 ID
+     * @param accessToken OAuth 제공자에서 받은 원본 Access Token
+     * @param expireTime  만료 시간 (초)
+     */
+    public void saveOAuthAccessToken(String provider, String userId, String accessToken, long expireTime) {
+        String key = String.format("oauth:%s:%s:access", provider, userId);
+        redisTemplate.opsForValue().set(key, accessToken, expireTime, TimeUnit.SECONDS);
+        System.out.println("Redis 저장 - OAuth Access Token - Key: " + key + ", TTL: " + expireTime + "초");
+    }
+
+    /**
+     * OAuth 제공자 원본 Refresh Token 저장 (구글, 카카오 등에서 받은 토큰)
+     * 
+     * @param provider     소셜 로그인 제공자 (kakao, naver, google)
+     * @param userId       사용자 ID
+     * @param refreshToken OAuth 제공자에서 받은 원본 Refresh Token
+     * @param expireTime   만료 시간 (초)
+     */
+    public void saveOAuthRefreshToken(String provider, String userId, String refreshToken, long expireTime) {
+        String key = String.format("oauth:%s:%s:refresh", provider, userId);
+        redisTemplate.opsForValue().set(key, refreshToken, expireTime, TimeUnit.SECONDS);
+        System.out.println("Redis 저장 - OAuth Refresh Token - Key: " + key + ", TTL: " + expireTime + "초");
+    }
+
+    /**
+     * OAuth 제공자 원본 Access Token 조회
+     * 
+     * @param provider 소셜 로그인 제공자
+     * @param userId   사용자 ID
+     * @return OAuth Access Token
+     */
+    public String getOAuthAccessToken(String provider, String userId) {
+        String key = String.format("oauth:%s:%s:access", provider, userId);
+        Object token = redisTemplate.opsForValue().get(key);
+        return token != null ? token.toString() : null;
+    }
+
+    /**
+     * OAuth 제공자 원본 Refresh Token 조회
+     * 
+     * @param provider 소셜 로그인 제공자
+     * @param userId   사용자 ID
+     * @return OAuth Refresh Token
+     */
+    public String getOAuthRefreshToken(String provider, String userId) {
+        String key = String.format("oauth:%s:%s:refresh", provider, userId);
+        Object token = redisTemplate.opsForValue().get(key);
+        return token != null ? token.toString() : null;
+    }
+
+    /**
+     * OAuth 제공자 원본 토큰 삭제
+     * 
+     * @param provider 소셜 로그인 제공자
+     * @param userId   사용자 ID
+     */
+    public void deleteOAuthTokens(String provider, String userId) {
+        String accessKey = String.format("oauth:%s:%s:access", provider, userId);
+        String refreshKey = String.format("oauth:%s:%s:refresh", provider, userId);
+        redisTemplate.delete(accessKey);
+        redisTemplate.delete(refreshKey);
+    }
 }
