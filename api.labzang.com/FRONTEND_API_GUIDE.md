@@ -23,8 +23,8 @@ http://localhost:8080
 - Credentials: `true` (쿠키 포함 가능)
 
 ### API 라우팅 규칙
-- 인증 관련: `/api/auth/**` → `authservice`로 라우팅
-- 카카오 OAuth: `/oauth2/kakao/**` → `authservice`로 라우팅
+- 인증 관련: `/api/auth/**` → `oauthservice`로 라우팅
+- 카카오 OAuth: `/oauth2/kakao/**` → `oauthservice`로 라우팅
 - 사용자 관련: `/api/users/**` → `userservice`로 라우팅
 
 ---

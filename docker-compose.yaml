@@ -1,0 +1,212 @@
+# ============================================================================
+# 로컬 통합 실행용 Docker Compose 설정
+# ============================================================================
+# 이 파일은 로컬 개발 환경에서 모든 서비스를 
+# profiles를 통해 선택적으로 실행할 수 있도록 통합 관리합니다.
+#
+# 사용 예시:
+#   - 기본 스택 실행 (gateway + oauthservice + userservice + redis):
+#     docker compose up
+#
+#   - AI 서비스 포함 실행:
+#     docker compose --profile ai up
+#
+#   - 백그라운드 실행:
+#     docker compose up -d
+#     docker compose --profile ai up -d
+#
+#   - 중지:
+#     docker compose down
+#
+# 주의사항:
+#   1. Docker Desktop이 실행 중이어야 합니다.
+#   2. 환경 변수 설정: api.labzang.com/.env.example을 .env로 복사하고 값 입력
+# ============================================================================
+
+services:
+  # ========================================================================
+  # Gateway Service (Spring Gateway + Spring Security + Redis 클라이언트)
+  # ========================================================================
+  gateway:
+    build:
+      context: ./api.labzang.com
+      dockerfile: Dockerfile
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - labzang-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    env_file:
+      - ./api.labzang.com/.env # 존재하는 경우에만 사용됨 (파일이 없어도 오류 없음)
+    depends_on:
+      - oauthservice
+      - userservice
+    restart: on-failure
+
+  # ========================================================================
+  # OAuth Service (Spring Boot - OAuth 인증 서비스)
+  # ========================================================================
+  oauthservice:
+    build:
+      context: ./service.labzang.com/oauthservice
+      dockerfile: Dockerfile
+    container_name: oauthservice
+    ports:
+      - "8081:8081"
+    networks:
+      - labzang-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY:-}
+      - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI:-http://localhost:8080/auth/kakao/callback}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI:-http://localhost:8080/auth/google/callback}
+      - JWT_SECRET=${JWT_SECRET:-dev-jwt-secret-key-change-in-production-minimum-32-characters}
+      - JWT_ACCESS_TOKEN_EXPIRATION=${JWT_ACCESS_TOKEN_EXPIRATION:-3600000}
+      - JWT_REFRESH_TOKEN_EXPIRATION=${JWT_REFRESH_TOKEN_EXPIRATION:-2592000000}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-false}
+    env_file:
+      - ./api.labzang.com/.env # 존재하는 경우에만 사용됨 (파일이 없어도 오류 없음)
+    depends_on:
+      - redis
+    restart: on-failure
+
+  # ========================================================================
+  # User Service (Spring Boot - 사용자 관리 서비스)
+  # ========================================================================
+  userservice:
+    build:
+      context: ./service.labzang.com/userservice
+      dockerfile: Dockerfile
+    container_name: userservice
+    ports:
+      - "8082:8082"
+    networks:
+      - labzang-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    env_file:
+      - ./api.labzang.com/.env # 존재하는 경우에만 사용됨 (파일이 없어도 오류 없음)
+    restart: on-failure
+
+  # ========================================================================
+  # Auth Service (FastAPI - 인증 서비스)
+  # ========================================================================
+  ai-authservice:
+    build:
+      context: ./ai.labzang.com
+      dockerfile: authservice/Dockerfile
+    container_name: ai-authservice
+    ports:
+      - "9002:9002"
+    networks:
+      - labzang-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - ./ai.labzang.com/.env
+    profiles:
+      - ai
+    restart: on-failure
+
+  # ========================================================================
+  # Crawler Service (FastAPI - 크롤링 서비스)
+  # ========================================================================
+  crawlerservice:
+    build:
+      context: ./ai.labzang.com
+      dockerfile: crawlerservice/Dockerfile
+    container_name: crawlerservice
+    ports:
+      - "9001:9001"
+    networks:
+      - labzang-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - ./ai.labzang.com/.env # 존재하는 경우에만 사용됨 (파일이 없어도 오류 없음)
+    profiles:
+      - ai
+    restart: on-failure
+
+  # ========================================================================
+  # Chatbot Service (FastAPI - 챗봇 서비스)
+  # ========================================================================
+  chatbotservice:
+    build:
+      context: ./ai.labzang.com
+      dockerfile: chatbotservice/Dockerfile
+    container_name: chatbotservice
+    ports:
+      - "9003:9003"
+    networks:
+      - labzang-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - ./ai.labzang.com/.env
+    profiles:
+      - ai
+    restart: on-failure
+
+  # ========================================================================
+  # Redis (공용 인프라 서비스)
+  # ========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - labzang-network
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: on-failure
+
+# ========================================================================
+# Networks
+# ========================================================================
+networks:
+  labzang-network:
+    driver: bridge
+    name: labzang-network
+
+# ========================================================================
+# Volumes
+# ========================================================================
+volumes:
+  redis-data:
+    name: redis-data
+
+# ========================================================================
+# .env 파일 예시 (각 디렉터리에 필요시 생성)
+# ========================================================================
+# api.labzang.com/.env 예시:
+#   KAKAO_REST_API_KEY=your_kakao_key
+#   KAKAO_REDIRECT_URI=http://localhost:8080/auth/kakao/callback
+#   GOOGLE_CLIENT_ID=your_google_client_id
+#   GOOGLE_CLIENT_SECRET=your_google_client_secret
+#   GOOGLE_REDIRECT_URI=http://localhost:8080/auth/google/callback
+#   JWT_SECRET=your_jwt_secret_key
+#   JWT_ACCESS_TOKEN_EXPIRATION=3600000
+#   JWT_REFRESH_TOKEN_EXPIRATION=2592000000
+#   REDIS_HOST=redis
+#   REDIS_PORT=6379
+#   REDIS_PASSWORD=
+#   REDIS_SSL_ENABLED=false
+#
+# ai.labzang.com/.env 예시:
+#   # FastAPI 관련 환경 변수 (필요시 추가)
+#   # 예: API_KEY=your_api_key
+#   # 예: DATABASE_URL=postgresql://user:pass@host:port/db
+# ========================================================================

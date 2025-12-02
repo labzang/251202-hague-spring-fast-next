@@ -1,0 +1,3 @@
+{
+  "/api/auth/kakao/login/route": "app/api/auth/kakao/login/route.js"
+}

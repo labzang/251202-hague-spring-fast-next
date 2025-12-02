@@ -1,0 +1,190 @@
+[00:00:01.199] Server  LOG      ✓ Ready in 851ms
+[00:00:16.359] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:37.403] Browser LOG     구글 로그인 요청 시작
+[00:00:37.403] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:00:37.403] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:00:37.403] Browser LOG     구글 로그인 응답 상태: 404 Not Found
+[00:00:37.403] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[00:00:37.403] Browser ERROR   HTTP 에러: 404 Not Found
+[00:00:37.403] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:04:45.929+00:00","status":404,"error":"Not Found","path":"/google/auth-url"}
+[00:01:43.710] Browser LOG     API 응답: {"auth_url":"https://kauth.kakao.com/oauth/authorize?client_id=.................&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foauth2%2Fkakao%2Fcallback&response_type=code","success":true}
+[00:02:44.722] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:57.787] Browser LOG     구글 로그인 요청 시작
+[00:02:57.787] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:02:57.787] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:02:57.787] Browser LOG     구글 로그인 응답 상태: 404 Not Found
+[00:02:57.787] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[00:02:57.787] Browser ERROR   HTTP 에러: 404 Not Found
+[00:02:57.787] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:07:14.552+00:00","status":404,"error":"Not Found","path":"/google/auth-url"}
+[00:03:15.037] Server  LOG      ✓ Compiled in 23ms
+[00:03:17.045] Server  LOG      ✓ Compiled in 26ms
+[00:03:26.665] Server  LOG      ✓ Compiled in 25ms
+[00:13:52.643] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:13:57.182] Browser LOG     구글 로그인 요청 시작
+[00:13:57.182] Browser LOG     구글 로그인 요청 URL: http://localhost:8080//api/auth/google/auth-url
+[00:13:57.182] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:13:57.182] Browser ERROR   구글 로그인 실패: {}
+[00:14:09.709] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:20.375] Browser LOG     구글 로그인 요청 시작
+[00:14:20.375] Browser LOG     구글 로그인 요청 URL: http://localhost:8080//api/auth/google/auth-url
+[00:14:20.375] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:14:20.375] Browser ERROR   구글 로그인 실패: {}
+[00:14:45.543] Server  LOG      ✓ Compiled in 22ms
+[00:14:53.787] Server  LOG      ✓ Compiled in 30ms
+[00:14:55.671] Server  LOG      ✓ Compiled in 19ms
+[00:14:58.243] Browser LOG     구글 로그인 요청 시작
+[00:14:58.243] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:14:58.243] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:14:59.540] Browser LOG     구글 로그인 요청 시작
+[00:14:59.540] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:14:59.540] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:15:00.034] Browser LOG     구글 로그인 요청 시작
+[00:15:00.034] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:15:00.034] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:15:00.258] Browser LOG     구글 로그인 요청 시작
+[00:15:00.258] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:15:00.258] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:15:00.623] Browser LOG     구글 로그인 요청 시작
+[00:15:00.623] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:15:00.623] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:15:00.830] Browser LOG     구글 로그인 요청 시작
+[00:15:00.830] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:15:00.830] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:15:01.007] Browser LOG     구글 로그인 요청 시작
+[00:15:01.007] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:15:01.007] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:15:01.158] Browser LOG     구글 로그인 요청 시작
+[00:15:01.158] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:15:01.158] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:25:00.298] Browser LOG     구글 로그인 응답 상태: 500 Internal Server Error
+[00:25:00.298] Browser LOG     구글 로그인 응답 헤더: {"content-length":"150","content-type":"application/json"}
+[00:25:00.298] Browser ERROR   HTTP 에러: 500 Internal Server Error
+[00:25:00.298] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:19:30.569+00:00","path":"/api/auth/google/auth-url","status":500,"error":"Internal Server Error","requestId":"689b94ab-7"}
+[00:25:00.298] Browser LOG     구글 로그인 응답 상태: 500 Internal Server Error
+[00:25:00.298] Browser LOG     구글 로그인 응답 헤더: {"content-length":"151","content-type":"application/json"}
+[00:25:00.298] Browser LOG     구글 로그인 응답 상태: 500 Internal Server Error
+[00:25:00.298] Browser LOG     구글 로그인 응답 헤더: {"content-length":"150","content-type":"application/json"}
+[00:25:00.298] Browser LOG     구글 로그인 응답 상태: 500 Internal Server Error
+[00:25:00.298] Browser LOG     구글 로그인 응답 헤더: {"content-length":"151","content-type":"application/json"}
+[00:25:00.298] Browser LOG     구글 로그인 응답 상태: 500 Internal Server Error
+[00:25:00.298] Browser LOG     구글 로그인 응답 헤더: {"content-length":"151","content-type":"application/json"}
+[00:25:00.298] Browser LOG     구글 로그인 응답 상태: 500 Internal Server Error
+[00:25:00.298] Browser LOG     구글 로그인 응답 헤더: {"content-length":"151","content-type":"application/json"}
+[00:25:00.298] Browser LOG     구글 로그인 응답 상태: 500 Internal Server Error
+[00:25:00.298] Browser LOG     구글 로그인 응답 헤더: {"content-length":"150","content-type":"application/json"}
+[00:25:00.298] Browser LOG     구글 로그인 응답 상태: 500 Internal Server Error
+[00:25:00.298] Browser LOG     구글 로그인 응답 헤더: {"content-length":"151","content-type":"application/json"}
+[00:25:00.298] Browser ERROR   HTTP 에러: 500 Internal Server Error
+[00:25:00.298] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:19:48.658+00:00","path":"/api/auth/google/auth-url","status":500,"error":"Internal Server Error","requestId":"689b94ab-12"}
+[00:25:00.298] Browser ERROR   HTTP 에러: 500 Internal Server Error
+[00:25:00.298] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:19:38.620+00:00","path":"/api/auth/google/auth-url","status":500,"error":"Internal Server Error","requestId":"689b94ab-9"}
+[00:25:00.298] Browser ERROR   HTTP 에러: 500 Internal Server Error
+[00:25:00.298] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:19:40.567+00:00","path":"/api/auth/google/auth-url","status":500,"error":"Internal Server Error","requestId":"689b94ab-10"}
+[00:25:00.298] Browser ERROR   HTTP 에러: 500 Internal Server Error
+[00:25:00.298] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:19:44.593+00:00","path":"/api/auth/google/auth-url","status":500,"error":"Internal Server Error","requestId":"689b94ab-11"}
+[00:25:00.298] Browser ERROR   HTTP 에러: 500 Internal Server Error
+[00:25:00.298] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:19:52.670+00:00","path":"/api/auth/google/auth-url","status":500,"error":"Internal Server Error","requestId":"689b94ab-13"}
+[00:25:00.298] Browser ERROR   HTTP 에러: 500 Internal Server Error
+[00:25:00.298] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:19:34.606+00:00","path":"/api/auth/google/auth-url","status":500,"error":"Internal Server Error","requestId":"689b94ab-8"}
+[00:25:00.298] Browser ERROR   HTTP 에러: 500 Internal Server Error
+[00:25:00.298] Browser ERROR   에러 응답 본문: {"timestamp":"2025-11-28T06:19:52.681+00:00","path":"/api/auth/google/auth-url","status":500,"error":"Internal Server Error","requestId":"207c6ba3-14"}
+[00:40:35.117] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:40:36.659] Browser LOG     API 응답: {"auth_url":"https://kauth.kakao.com/oauth/authorize?client_id=.................&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fkakao-callback&response_type=code","success":true}
+[00:40:38.775] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:40:41.100] Browser LOG     구글 로그인 요청 시작
+[00:40:41.100] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[00:40:41.100] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[00:40:41.100] Browser LOG     구글 로그인 응답 상태: 200 OK
+[00:40:41.100] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[00:40:41.100] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=94972f0c-5ccd-4544-9aa7-af18ceda3142","success":true}
+[00:40:47.110] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:05:09.814] Browser LOG     구글 로그인 요청 시작
+[01:05:09.814] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:05:09.814] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:05:09.928] Browser LOG     구글 로그인 응답 상태: 200 OK
+[01:05:09.928] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[01:05:09.928] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=0c44d780-612d-47e1-bb14-3a4c6a4b5cf8","success":true}
+[01:05:10.852] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:18:28.883] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:18:33.732] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:18:35.610] Browser LOG     구글 로그인 요청 시작
+[01:18:35.610] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:18:35.610] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:18:35.610] Browser LOG     구글 로그인 응답 상태: 200 OK
+[01:18:35.610] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[01:18:35.610] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=2e230b56-378e-4bb8-a845-dbb2132d448c","success":true}
+[01:18:36.716] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:20:19.248] Browser LOG     구글 로그인 요청 시작
+[01:20:19.248] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:20:19.248] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:20:19.248] Browser LOG     구글 로그인 응답 상태: 200 OK
+[01:20:19.248] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[01:20:19.248] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=8cc6f4c9-3e05-4b25-8d48-e78801023024","success":true}
+[01:20:20.292] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:22:54.466] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:22:55.894] Browser LOG     구글 로그인 요청 시작
+[01:22:55.894] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:22:55.894] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:22:55.894] Browser LOG     구글 로그인 응답 상태: 200 OK
+[01:22:55.894] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[01:22:55.894] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=b3faaea0-99a3-43f2-8202-04a8376510b4","success":true}
+[01:22:56.729] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:22:58.241] Browser LOG     구글 로그인 요청 시작
+[01:22:58.241] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:22:58.241] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:22:58.241] Browser LOG     구글 로그인 응답 상태: 200 OK
+[01:22:58.241] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[01:22:58.241] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=3cf07ff6-5574-40c6-88b2-45eeb407ea5f","success":true}
+[01:22:58.801] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:24:16.379] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:24:18.060] Browser LOG     구글 로그인 요청 시작
+[01:24:18.060] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:24:18.060] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:24:18.060] Browser LOG     구글 로그인 응답 상태: 200 OK
+[01:24:18.060] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[01:24:18.060] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=b220f740-4139-41e0-bf48-820df02e3bf6","success":true}
+[01:24:18.955] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:25:51.206] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:25:54.341] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:25:58.487] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:25:59.926] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:26:03.316] Browser LOG     구글 로그인 요청 시작
+[01:26:03.316] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:26:03.316] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:26:03.316] Browser LOG     구글 로그인 응답 상태: 200 OK
+[01:26:03.316] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[01:26:03.316] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=0ed62d50-f796-40d7-8b3f-8a152784ddc2","success":true}
+[01:26:04.184] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:57:16.978] Browser LOG     구글 로그인 요청 시작
+[01:57:16.978] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:57:16.978] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:57:16.978] Browser LOG     구글 로그인 응답 상태: 200 OK
+[01:57:16.978] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[01:57:16.978] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=a9757f5f-ccc5-4c39-8441-9a56ae3ab5cd","success":true}
+[01:57:17.913] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:58:02.396] Browser LOG     구글 로그인 요청 시작
+[01:58:02.396] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[01:58:02.396] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[01:58:05.530] Browser ERROR   구글 로그인 실패: {}
+[01:59:23.833] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:11:49.785] Browser LOG     구글 로그인 요청 시작
+[02:11:49.786] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[02:11:49.786] Browser LOG     구글 로그인 요청 헤더: {"Content-Type":"application/json"}
+[02:11:49.942] Browser LOG     구글 로그인 응답 상태: 200 OK
+[02:11:49.942] Browser LOG     구글 로그인 응답 헤더: {"content-type":"application/json"}
+[02:11:49.942] Browser LOG     구글 로그인 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=9cac6ad6-37c2-48f8-9034-57ca293c297d","success":true}
+[02:11:56.337] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:18:01.856] Server  LOG      ✓ Compiled in 56ms
+[02:18:20.915] Server  LOG      ✓ Compiled in 62ms
+[02:18:38.953] Server  LOG      ✓ Compiled in 124ms
+[02:19:02.553] Server  LOG      ✓ Compiled in 46ms
+[02:20:14.546] Browser ERROR   구글 로그인 에러: 인증 처리 중 오류가 발생했습니다. null
+[02:20:16.476] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:20:17.456] Browser ERROR   구글 로그인 에러: 인증 처리 중 오류가 발생했습니다. null
+[02:20:51.739] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:20:52.944] Browser ERROR   구글 로그인 에러: 인증 처리 중 오류가 발생했습니다. null
+[02:20:53.846] Browser LOG     구글 로그인 요청 시작
+[02:20:53.846] Browser LOG     구글 로그인 요청 URL: http://localhost:8080/api/auth/google/auth-url
+[02:20:54.112] Browser LOG     구글 인증 URL 응답: {"auth_url":"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=887598075223-0ch9d7tmffp9s1kjqoi4f5dcbsq5kdae.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&state=7f1f1140-a82d-4196-bde2-ae20a9220910","success":true}
+[02:20:55.388] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:20:55.504] Browser LOG     구글 로그인 성공, 토큰 저장 완료
