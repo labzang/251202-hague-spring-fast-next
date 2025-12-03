@@ -50,7 +50,7 @@ services:
   # ========================================================================
   oauthservice:
     build:
-      context: ./service.labzang.com/oauthservice
+      context: ./core.labzang.com/oauthservice
       dockerfile: Dockerfile
     container_name: oauthservice
     ports:
@@ -82,7 +82,7 @@ services:
   # ========================================================================
   userservice:
     build:
-      context: ./service.labzang.com/userservice
+      context: ./core.labzang.com/userservice
       dockerfile: Dockerfile
     container_name: userservice
     ports:

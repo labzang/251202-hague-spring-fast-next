@@ -7,7 +7,7 @@
 이 프로젝트는 **멀티 프로젝트 구조**로 구성되어 있습니다:
 
 ```
-service.labzang.com/
+core.labzang.com/
 ├── build.gradle          # 루트 빌드 설정 (공통 의존성 관리)
 ├── settings.gradle       # 멀티 프로젝트 설정
 ├── oauthservice/        # OAuth 인증 서비스 (8081)
@@ -18,18 +18,18 @@ service.labzang.com/
 
 ### 전체 서비스 빌드
 ```bash
-cd service.labzang.com
+cd core.labzang.com
 ./gradlew build
 ```
 
 ### 개별 서비스 빌드
 ```bash
 # OAuth 서비스만 빌드
-cd service.labzang.com/oauthservice
+cd core.labzang.com/oauthservice
 ./gradlew build
 
 # User 서비스만 빌드
-cd service.labzang.com/userservice
+cd core.labzang.com/userservice
 ./gradlew build
 ```
 
@@ -56,10 +56,10 @@ cd service.labzang.com/userservice
 
 ```bash
 # OAuth 서비스
-docker build -t oauthservice:latest ./service.labzang.com/oauthservice
+docker build -t oauthservice:latest ./core.labzang.com/oauthservice
 
 # User 서비스
-docker build -t userservice:latest ./service.labzang.com/userservice
+docker build -t userservice:latest ./core.labzang.com/userservice
 ```
 
 또는 `docker-compose.local.yaml`을 사용하여 전체 스택을 실행할 수 있습니다.

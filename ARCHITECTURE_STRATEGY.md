@@ -21,7 +21,7 @@ api.labzang.com = Gateway + Security (인증/인가 전용)
 
 ↓ 라우팅 ↓
 
-service.labzang.com = 비즈니스 로직 (마이크로서비스)
+core.labzang.com = 비즈니스 로직 (마이크로서비스)
 ├─ 모든 비즈니스 로직
 ├─ 도메인별 서비스 분리
 └─ DB 접근 및 데이터 처리
@@ -92,14 +92,14 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: lb://service.labzang.com
+          uri: lb://core.labzang.com
           predicates:
             - Path=/api/users/**
           filters:
             - JwtAuthenticationFilter
         
         - id: product-service
-          uri: lb://service.labzang.com
+          uri: lb://core.labzang.com
           predicates:
             - Path=/api/products/**
           filters:
@@ -113,7 +113,7 @@ spring:
 
 ---
 
-### 2. service.labzang.com (비즈니스 로직)
+### 2. core.labzang.com (비즈니스 로직)
 
 **역할**: 모든 비즈니스 로직 처리
 - ✅ 도메인별 마이크로서비스
@@ -122,7 +122,7 @@ spring:
 - ✅ 이벤트 발행/구독
 
 ```
-service.labzang.com/
+core.labzang.com/
 ├── userservice/               # 사용자 관리
 │   ├── src/main/java/
 │   │   └── com/labzang/user/
@@ -278,25 +278,25 @@ admin.labzang.com/
 ## 🚀 마이그레이션 전략
 
 ### Phase 1: 현재 상태 정리 (완료)
-✅ 기존 `api.labzang.com/services/authservice` → `service.labzang.com/oauthservice`로 이동
-✅ 기존 `api.labzang.com/services/userservice` → `service.labzang.com/userservice`로 이동
+✅ 기존 `api.labzang.com/services/authservice` → `core.labzang.com/oauthservice`로 이동
+✅ 기존 `api.labzang.com/services/userservice` → `core.labzang.com/userservice`로 이동
 ✅ `docker-compose.local.yaml` 통합 완료
 
 ### Phase 2: 디렉토리 재구성 (진행 예정)
 ```bash
-# 1단계: service.labzang.com 디렉토리 생성
-mkdir service.labzang.com
+# 1단계: core.labzang.com 디렉토리 생성
+mkdir core.labzang.com
 
 # 2단계: userservice 이동
-mv api.labzang.com/services/userservice service.labzang.com/userservice
+mv api.labzang.com/services/userservice core.labzang.com/userservice
 
 # 3단계: authservice를 oauthservice로 리팩토링
-# api.labzang.com/services/authservice → service.labzang.com/oauthservice
-# (OAuth 인증만 담당, 사용자 비즈니스 로직은 service.labzang.com/userservice로)
+# api.labzang.com/services/authservice → core.labzang.com/oauthservice
+# (OAuth 인증만 담당, 사용자 비즈니스 로직은 core.labzang.com/userservice로)
 
 # 4단계: 새로운 비즈니스 서비스 추가
-# service.labzang.com/productservice
-# service.labzang.com/orderservice
+# core.labzang.com/productservice
+# core.labzang.com/orderservice
 # 등등...
 ```
 
@@ -307,14 +307,14 @@ spring:
   cloud:
     gateway:
       routes:
-        # service.labzang.com 라우팅
+        # core.labzang.com 라우팅
         - id: user-service
-          uri: http://service.labzang.com:8082
+          uri: http://core.labzang.com:8082
           predicates:
             - Path=/api/users/**
           
         - id: product-service
-          uri: http://service.labzang.com:8083
+          uri: http://core.labzang.com:8083
           predicates:
             - Path=/api/products/**
         
@@ -341,12 +341,12 @@ services:
   
   # ===== Service Layer =====
   userservice:
-    build: ./service.labzang.com/userservice
+    build: ./core.labzang.com/userservice
     ports: ["8082:8082"]
     profiles: ["service"]
   
   productservice:
-    build: ./service.labzang.com/productservice
+    build: ./core.labzang.com/productservice
     ports: ["8083:8083"]
     profiles: ["service"]
   
@@ -383,7 +383,7 @@ LABZANG.COM/
 │   ├── security/              # OAuth + JWT (8081)
 │   └── .env
 │
-├── service.labzang.com/       # 비즈니스 로직 (마이크로서비스)
+├── core.labzang.com/       # 비즈니스 로직 (마이크로서비스)
 │   ├── userservice/           # 사용자 관리 (8082)
 │   ├── productservice/        # 상품 관리 (8083)
 │   ├── orderservice/          # 주문 관리 (8084)
@@ -417,7 +417,7 @@ api.labzang.com
 ├── gateway (Railway Service #1)
 └── security (Railway Service #2)
 
-service.labzang.com
+core.labzang.com
 ├── userservice (Railway Service #3)
 ├── productservice (Railway Service #4)
 └── ... (각각 독립 서비스로 배포)
@@ -448,7 +448,7 @@ admin.labzang.com → Vercel Project #2
     ↓ 인증 완료
 [api.labzang.com/gateway] 라우팅
     ↓
-[service.labzang.com/*] 비즈니스 로직 처리
+[core.labzang.com/*] 비즈니스 로직 처리
     ↓
 응답 반환
 ```
@@ -474,7 +474,7 @@ admin.labzang.com → Vercel Project #2
    └─> GET /api/users/me (with JWT in header)
        └─> api.labzang.com/gateway:8080
            └─> JWT 검증
-               └─> service.labzang.com/userservice:8082
+               └─> core.labzang.com/userservice:8082
                    └─> DB에서 사용자 정보 조회
                        └─> 응답 반환
 ```
@@ -499,7 +499,7 @@ admin.labzang.com → Vercel Project #2
    - 비즈니스 로직 금지
    - 인증/인가 + 라우팅만
 
-2. **service.labzang.com = 모든 비즈니스 로직**
+2. **core.labzang.com = 모든 비즈니스 로직**
    - 도메인별 마이크로서비스
    - DB 접근 및 데이터 처리
 
@@ -522,13 +522,13 @@ admin.labzang.com → Vercel Project #2
 ## 🚦 다음 단계
 
 ### 즉시 진행
-1. `service.labzang.com` 디렉토리 생성
-2. `api.labzang.com/services/userservice` → `service.labzang.com/userservice` 이동
-3. `api.labzang.com/services/authservice` → `service.labzang.com/oauthservice`로 리팩토링
+1. `core.labzang.com` 디렉토리 생성
+2. `api.labzang.com/services/userservice` → `core.labzang.com/userservice` 이동
+3. `api.labzang.com/services/authservice` → `core.labzang.com/oauthservice`로 리팩토링
 4. `docker-compose.local.yaml` 업데이트
 
 ### 단계적 진행
-1. 새로운 비즈니스 서비스는 `service.labzang.com/` 아래에 생성
+1. 새로운 비즈니스 서비스는 `core.labzang.com/` 아래에 생성
 2. 기존 서비스는 점진적으로 마이그레이션
 3. Railway 배포 시 각 서비스를 독립적으로 배포
 4. 모니터링 및 로깅 시스템 구축
