@@ -1,31 +1,35 @@
 # ============================================================================
-# 로컬 통합 실행용 Docker Compose 설정
+# 통합 Docker Compose 설정
 # ============================================================================
-# 이 파일은 로컬 개발 환경에서 모든 서비스를 
-# profiles를 통해 선택적으로 실행할 수 있도록 통합 관리합니다.
+# Neon PostgreSQL + Upstash Redis 연동
+# profiles를 통해 서비스 그룹을 선택적으로 실행할 수 있습니다.
 #
 # 사용 예시:
-#   - 기본 스택 실행 (gateway + oauthservice + userservice + redis):
+#   - 기본 스택 실행 (gateway + oauthservice + userservice):
 #     docker compose up
 #
-#   - AI 서비스 포함 실행:
+#   - ERP 서비스 포함:
+#     docker compose --profile erp up
+#
+#   - AI 서비스 포함:
 #     docker compose --profile ai up
+#
+#   - 모든 서비스:
+#     docker compose --profile erp --profile ai up
 #
 #   - 백그라운드 실행:
 #     docker compose up -d
-#     docker compose --profile ai up -d
-#
-#   - 중지:
-#     docker compose down
+#     docker compose --profile erp --profile ai up -d
 #
 # 주의사항:
 #   1. Docker Desktop이 실행 중이어야 합니다.
-#   2. 환경 변수 설정: api.labzang.com/.env.example을 .env로 복사하고 값 입력
+#   2. 루트 디렉토리에 .env 파일 생성 (env.template 참고)
+#   3. Neon PostgreSQL과 Upstash Redis 정보를 .env에 설정
 # ============================================================================
 
 services:
   # ========================================================================
-  # Gateway Service (Spring Gateway + Spring Security + Redis 클라이언트)
+  # Gateway Service (Spring Boot)
   # ========================================================================
   gateway:
     build:
@@ -37,16 +41,26 @@ services:
     networks:
       - labzang-network
     environment:
-      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-default}
+      - SPRING_DATASOURCE_URL=${DATABASE_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
+      - SPRING_JPA_SHOW_SQL=${SPRING_JPA_SHOW_SQL:-true}
+      - SPRING_REDIS_HOST=${REDIS_HOST}
+      - SPRING_REDIS_PORT=${REDIS_PORT}
+      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SPRING_REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
+      - JWT_SECRET=${JWT_SECRET}
     env_file:
-      - ./api.labzang.com/.env # 존재하는 경우에만 사용됨 (파일이 없어도 오류 없음)
+      - .env
     depends_on:
       - oauthservice
       - userservice
     restart: on-failure
 
   # ========================================================================
-  # OAuth Service (Spring Boot - OAuth 인증 서비스)
+  # OAuth Service (Spring Boot)
   # ========================================================================
   oauthservice:
     build:
@@ -58,27 +72,27 @@ services:
     networks:
       - labzang-network
     environment:
-      - SPRING_PROFILES_ACTIVE=default
-      - KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY:-}
-      - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI:-http://localhost:8080/auth/kakao/callback}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
-      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI:-http://localhost:8080/auth/google/callback}
-      - JWT_SECRET=${JWT_SECRET:-dev-jwt-secret-key-change-in-production-minimum-32-characters}
-      - JWT_ACCESS_TOKEN_EXPIRATION=${JWT_ACCESS_TOKEN_EXPIRATION:-3600000}
-      - JWT_REFRESH_TOKEN_EXPIRATION=${JWT_REFRESH_TOKEN_EXPIRATION:-2592000000}
-      - REDIS_HOST=${REDIS_HOST:-redis}
-      - REDIS_PORT=${REDIS_PORT:-6379}
-      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
-      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-false}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-default}
+      - SPRING_DATASOURCE_URL=${DATABASE_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
+      - SPRING_REDIS_HOST=${REDIS_HOST}
+      - SPRING_REDIS_PORT=${REDIS_PORT}
+      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SPRING_REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
+      - JWT_SECRET=${JWT_SECRET}
+      - KAKAO_REST_API_KEY=${KAKAO_REST_API_KEY}
+      - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
     env_file:
-      - ./api.labzang.com/.env # 존재하는 경우에만 사용됨 (파일이 없어도 오류 없음)
-    depends_on:
-      - redis
+      - .env
     restart: on-failure
 
   # ========================================================================
-  # User Service (Spring Boot - 사용자 관리 서비스)
+  # User Service (Spring Boot)
   # ========================================================================
   userservice:
     build:
@@ -90,13 +104,194 @@ services:
     networks:
       - labzang-network
     environment:
-      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-default}
+      - SPRING_DATASOURCE_URL=${DATABASE_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
     env_file:
-      - ./api.labzang.com/.env # 존재하는 경우에만 사용됨 (파일이 없어도 오류 없음)
+      - .env
     restart: on-failure
 
   # ========================================================================
-  # Auth Service (FastAPI - 인증 서비스)
+  # ERP Services (FastAPI)
+  # ========================================================================
+  customerservice:
+    build:
+      context: ./erp.labzang.com
+      dockerfile: customerservice/Dockerfile
+    container_name: customerservice
+    ports:
+      - "9009:9009"
+    networks:
+      - labzang-network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - .env
+    profiles:
+      - erp
+    restart: on-failure
+
+  dashboardservice:
+    build:
+      context: ./erp.labzang.com
+      dockerfile: dashboardservice/Dockerfile
+    container_name: dashboardservice
+    ports:
+      - "9008:9008"
+    networks:
+      - labzang-network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - .env
+    profiles:
+      - erp
+    restart: on-failure
+
+  orderservice:
+    build:
+      context: ./erp.labzang.com
+      dockerfile: orderservice/Dockerfile
+    container_name: orderservice
+    ports:
+      - "9007:9007"
+    networks:
+      - labzang-network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - .env
+    profiles:
+      - erp
+    restart: on-failure
+
+  reportservice:
+    build:
+      context: ./erp.labzang.com
+      dockerfile: reportservice/Dockerfile
+    container_name: reportservice
+    ports:
+      - "9006:9006"
+    networks:
+      - labzang-network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - .env
+    profiles:
+      - erp
+    restart: on-failure
+
+  settingservice:
+    build:
+      context: ./erp.labzang.com
+      dockerfile: settingservice/Dockerfile
+    container_name: settingservice
+    ports:
+      - "9005:9005"
+    networks:
+      - labzang-network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - .env
+    profiles:
+      - erp
+    restart: on-failure
+
+  stockservice:
+    build:
+      context: ./erp.labzang.com
+      dockerfile: stockservice/Dockerfile
+    container_name: stockservice
+    ports:
+      - "9004:9004"
+    networks:
+      - labzang-network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    env_file:
+      - .env
+    profiles:
+      - erp
+    restart: on-failure
+
+  # ========================================================================
+  # AI Services (FastAPI)
   # ========================================================================
   ai-authservice:
     build:
@@ -108,17 +303,25 @@ services:
     networks:
       - labzang-network
     environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
     env_file:
-      - ./ai.labzang.com/.env
+      - .env
     profiles:
       - ai
     restart: on-failure
 
-  # ========================================================================
-  # Crawler Service (FastAPI - 크롤링 서비스)
-  # ========================================================================
   crawlerservice:
     build:
       context: ./ai.labzang.com
@@ -129,17 +332,25 @@ services:
     networks:
       - labzang-network
     environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
     env_file:
-      - ./ai.labzang.com/.env # 존재하는 경우에만 사용됨 (파일이 없어도 오류 없음)
+      - .env
     profiles:
       - ai
     restart: on-failure
 
-  # ========================================================================
-  # Chatbot Service (FastAPI - 챗봇 서비스)
-  # ========================================================================
   chatbotservice:
     build:
       context: ./ai.labzang.com
@@ -150,27 +361,23 @@ services:
     networks:
       - labzang-network
     environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SSL_ENABLED=${REDIS_SSL_ENABLED:-true}
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
     env_file:
-      - ./ai.labzang.com/.env
+      - .env
     profiles:
       - ai
-    restart: on-failure
-
-  # ========================================================================
-  # Redis (공용 인프라 서비스)
-  # ========================================================================
-  redis:
-    image: redis:7-alpine
-    container_name: redis
-    ports:
-      - "6379:6379"
-    networks:
-      - labzang-network
-    volumes:
-      - redis-data:/data
-    command: redis-server --appendonly yes
     restart: on-failure
 
 # ========================================================================
@@ -182,31 +389,12 @@ networks:
     name: labzang-network
 
 # ========================================================================
-# Volumes
+# 사용법
 # ========================================================================
-volumes:
-  redis-data:
-    name: redis-data
-
-# ========================================================================
-# .env 파일 예시 (각 디렉터리에 필요시 생성)
-# ========================================================================
-# api.labzang.com/.env 예시:
-#   KAKAO_REST_API_KEY=your_kakao_key
-#   KAKAO_REDIRECT_URI=http://localhost:8080/auth/kakao/callback
-#   GOOGLE_CLIENT_ID=your_google_client_id
-#   GOOGLE_CLIENT_SECRET=your_google_client_secret
-#   GOOGLE_REDIRECT_URI=http://localhost:8080/auth/google/callback
-#   JWT_SECRET=your_jwt_secret_key
-#   JWT_ACCESS_TOKEN_EXPIRATION=3600000
-#   JWT_REFRESH_TOKEN_EXPIRATION=2592000000
-#   REDIS_HOST=redis
-#   REDIS_PORT=6379
-#   REDIS_PASSWORD=
-#   REDIS_SSL_ENABLED=false
-#
-# ai.labzang.com/.env 예시:
-#   # FastAPI 관련 환경 변수 (필요시 추가)
-#   # 예: API_KEY=your_api_key
-#   # 예: DATABASE_URL=postgresql://user:pass@host:port/db
+# 1. .env 파일 생성: env.template을 참고하여 .env 파일 생성
+# 2. Neon PostgreSQL과 Upstash Redis 정보 입력
+# 3. 기본 서비스 실행: docker compose up
+# 4. ERP 서비스 포함: docker compose --profile erp up
+# 5. AI 서비스 포함: docker compose --profile ai up
+# 6. 모든 서비스: docker compose --profile erp --profile ai up
 # ========================================================================
