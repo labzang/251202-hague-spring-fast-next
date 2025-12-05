@@ -16,7 +16,7 @@ from icecream import ic
 # 공통 모듈 경로 추가
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from app.titanic.model import TitanicPassenger
+
 
 
 class TitanicService:
