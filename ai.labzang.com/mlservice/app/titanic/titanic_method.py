@@ -11,21 +11,15 @@ class TitanicMethod(object):
     def new_model(self, fname: str) -> pd.DataFrame:
         return pd.read_csv(fname)
 
-    def create_train(self) -> pd.DataFrame:
-        return self.new_model().drop(columns=['Survived'])
+    def create_train(self, df: DataFrame, label: str) -> pd.DataFrame:
+        return df.drop(columns=[label])
 
-    def create_label(self) -> pd.DataFrame:
-        return self.new_model()[['Survived']]
+    def create_label(self, df: DataFrame, label: str) -> pd.DataFrame:
+        return df[[label]]
 
-    def drop_feature(self, *feature: str) -> pd.DataFrame:
-        df_train = self.create_train()
-        feature_list = list(feature)
-        df_dropped = df_train.drop(columns=feature_list)
-        return df_dropped
+    def drop_feature(self, df: DataFrame, *feature: str) -> pd.DataFrame:
+        return df.drop(columns=[x for x in feature])
 
-    def null_check(self) -> int:
-        ic('🔍 데이터 결측치 확인')
-        df_train = self.create_train()
-        null_count = df_train.isnull().sum().sum()
-        return int(null_count)
+    def null_check(self, df: DataFrame) -> int:
+        return int(df.isnull().sum().sum())
 
