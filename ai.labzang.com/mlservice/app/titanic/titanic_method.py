@@ -1,20 +1,17 @@
-
+from pathlib import Path
+import pandas as pd
+from app.titanic.titanic_dataset import TitanicDataSet
 
 class TitanicMethod(object): 
 
     def __init__(self):
-        # 데이터셋 객체 생성
-        pass
+        self.dataset = TitanicDataSet()
 
+    def new_model(self) -> pd.DataFrame:
+        return pd.read_csv("train.csv")
 
-    def new_model(self):
-        # train.csv 파일을 읽어와서 데이터프레임 작성
-        pass
+    def create_train(self) -> pd.DataFrame:
+        return self.new_model().drop(columns=['Survived'])
 
-    def create_train(self):
-        # Survived 값을 제거한 데이터프레임 작성
-        pass
-
-    def create_label(self):
-        # Survived 값만 가지는 답안지 데이터프레임 작성
-        pass
+    def create_label(self) -> pd.DataFrame:
+        return self.new_model()[['Survived']]
