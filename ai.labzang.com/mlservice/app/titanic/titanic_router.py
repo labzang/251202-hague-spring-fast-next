@@ -9,8 +9,7 @@ import sys
 # 공통 모듈 경로 추가
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from app.titanic.service import TitanicService
-from app.titanic.model import TitanicPassenger
+from app.titanic.titanic_service import TitanicService
 from common.utils import create_response, create_error_response
 
 router = APIRouter(prefix="/titanic", tags=["titanic"])

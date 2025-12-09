@@ -36,16 +36,15 @@ except Exception as e:
     config = Config()
 
 # 라우터 및 공통 모듈 import
+LoggingMiddleware = None
 try:
-    from app.titanic.router import router as titanic_router
+    from app.titanic.titanic_router import router as titanic_router
     from common.middleware import LoggingMiddleware
     from common.utils import setup_logging
 except ImportError as e:
     # 모듈을 찾을 수 없는 경우 기본값 사용
     from fastapi import APIRouter
     titanic_router = APIRouter()
-    class LoggingMiddleware:
-        pass
     def setup_logging(name):
         import logging
         return logging.getLogger(name)
@@ -109,13 +108,15 @@ app.add_middleware(
 )
 
 # 미들웨어 추가
-app.add_middleware(LoggingMiddleware)
+if LoggingMiddleware is not None:
+    app.add_middleware(LoggingMiddleware)
 
 # 라우터 등록
-app.include_router(titanic_router)
+# Gateway에서 이미 /ml로 rewrite하므로 prefix 없이 등록
+app.include_router(titanic_router, prefix="/ml")
 
 # CSV 파일 경로
-CSV_FILE_PATH = Path(__file__).parent / "train.csv"
+CSV_FILE_PATH = Path(__file__).parent / "resources" / "titanic" / "train.csv"
 
 
 def load_top_10_passengers():

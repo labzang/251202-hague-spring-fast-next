@@ -43,6 +43,13 @@ spring:
           filters:
             - RewritePath=/api/users/(?<segment>.*), /${segment}
 
+        - id: ml-service-route
+          uri: http://mlservice:9010
+          predicates:
+            - Path=/api/ml/**
+          filters:
+            - RewritePath=/api/ml/(?<segment>.*), /ml/${segment}
+
       globalcors:
         cors-configurations:
           '[/**]':
