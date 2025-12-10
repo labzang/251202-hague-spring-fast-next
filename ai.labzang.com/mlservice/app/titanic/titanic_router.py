@@ -11,6 +11,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from app.titanic.titanic_service import TitanicService
 from common.utils import create_response, create_error_response
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/titanic", tags=["titanic"])
 
@@ -71,4 +74,60 @@ async def preprocess_data():
         raise HTTPException(
             status_code=500,
             detail=f"전처리 중 오류가 발생했습니다: {str(e)}"
+        )
+@router.get("/evaluate")
+async def evaluate_model():
+    """
+    모델 평가 실행
+    - 전처리, 모델링, 학습, 평가를 순차적으로 실행
+    - 후 모델 평가 결과 반환
+    """
+    try:
+        service = get_service()
+        
+        # 1. 전처리
+        logger.info("전처리 실행 중...")
+        service.preprocess()
+        
+        # 2. 평가 (K-Fold 교차 검증 사용, 별도 학습 불필요)
+        logger.info("평가 실행 중...")
+        result = service.evaluate()
+        
+        return create_response(
+            data=result,
+            message="모델 평가가 완료되었습니다"
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"평가 중 오류가 발생했습니다: {str(e)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"평가 중 오류가 발생했습니다: {str(e)}"
+        )
+
+@router.get("/submit")
+async def submit_model():
+    """
+    제출 실행
+    """        
+    try:
+        service = get_service()
+        logger.info("제출 실행 중...")
+        result = service.submit()
+        return create_response(
+            data=result,
+            message="제출 파일이 생성되었습니다"
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"제출 중 오류가 발생했습니다: {str(e)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"제출 중 오류가 발생했습니다: {str(e)}"
         )
