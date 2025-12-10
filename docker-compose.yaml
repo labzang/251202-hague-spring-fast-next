@@ -165,6 +165,8 @@ services:
       - "9010:9010"
     networks:
       - labzang-network
+    volumes:
+      - ./ai.labzang.com/mlservice/app/seoul_crime/save:/app/app/seoul_crime/save
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - DB_HOST=${DB_HOST}

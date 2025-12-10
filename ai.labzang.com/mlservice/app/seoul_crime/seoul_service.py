@@ -159,7 +159,7 @@ class SeoulService:
             # 길이가 다르더라도 가능한 만큼만 추가
             crime['자치구'] = gu_names[:len(crime)] if len(gu_names) > len(crime) else gu_names + [''] * (len(crime) - len(gu_names))
 
-        logger.info("카카오맵 실행 완료")
+        logger.info("😎😎😎😎카카오맵 실행 완료😎😎😎😎")
 
         # crime 를 save 폴더에 csv 파일로 저장 (컬럼 순서 정렬)
         save_path = Path(self.data.sname)
@@ -177,14 +177,9 @@ class SeoulService:
         crime_sorted = crime[ordered_cols + rest_cols]
         out_file = save_path / "crime.csv"
         crime_sorted.to_csv(out_file, index=False)
-        logger.info(f"crime 데이터프레임을 {out_file} 에 저장했습니다.")
+        logger.info(f"👽👽👽👽crime 데이터프레임을 {out_file} 에 저장했습니다.👽👽👽👽")
 
 
-
-
-
-
-        
         return {
             "status": "success",
             "cctv_rows": len(cctv),
