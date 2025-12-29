@@ -16,8 +16,13 @@ export function CTASection() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link href="/portfolio">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-50 min-w-[200px] text-lg font-semibold">
+                포트폴리오 보기
+              </Button>
+            </Link>
             <Link href="/contact">
-              <Button size="lg" variant="outline" className="bg-white text-blue-600 hover:bg-gray-50 min-w-[200px] text-lg">
+              <Button size="lg" variant="outline" className="bg-transparent text-white hover:bg-white/10 min-w-[200px] text-lg border-2 border-white">
                 프로젝트 상담하기
               </Button>
             </Link>
