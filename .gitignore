@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI Model files (large files)
+*.safetensors
+*.bin
+*.onnx
+*.pt
+*.pth
+*.h5
+*.pkl
+*.pickle
+*.joblib
+*.model
+
+# Specific large model file
+chat.labzang.com/app/model/midm/model.safetensors
