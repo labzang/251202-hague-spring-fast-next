@@ -1,0 +1,3 @@
+[submodule "api.labzang.com"]
+	path = api.labzang.com
+	url = https://github.com/labzang/hagueapi.git
