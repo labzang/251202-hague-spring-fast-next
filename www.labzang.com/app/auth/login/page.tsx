@@ -17,6 +17,8 @@ export default function LoginPage() {
         naver: false,
     });
 
+    
+
     const handleGoogleClick = async () => {
         setIsLoading((prev) => ({ ...prev, google: true }));
         try {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '../../store/authStore';
+import { useAuthStore } from '../../store/auth.store';
 
 interface UserInfo {
     email?: string;

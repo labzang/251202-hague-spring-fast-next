@@ -2,9 +2,31 @@
  * 메인 서비스 - 로그인 핸들러 함수들
  * 클로저 패턴을 사용하여 공통 설정을 외부 스코프에 유지하고 이너 함수로 핸들러를 정의
  */
+
+// ============================================
+// Types
+// ============================================
+
+interface LoginTokens {
+    accessToken: string;
+    refreshToken: string;
+}
+
+interface LoginSuccessResult {
+    success: true;
+    accessToken: string;
+}
+
+interface LoginErrorResult {
+    success: false;
+    error: string;
+}
+
+type LoginResult = LoginSuccessResult | LoginErrorResult;
+
 const authService = (() => {
     // 외부 스코프 - 공통 설정 및 변수
-    const baseUrl = 'http://localhost:8080';
+    const baseUrl = 'api.labzang.com';
     const authPath = '/api/auth';
     const oauth2Path = '/oauth2';
 
@@ -167,6 +189,132 @@ const authService = (() => {
         }
     }
 
+    /**
+     * 로그인 성공 후 토큰 처리 함수
+     * - AccessToken: 반환 (호출 측에서 Zustand store에 저장)
+     * - RefreshToken: HttpOnly 쿠키에 저장
+     * 
+     * @param tokens - accessToken과 refreshToken
+     * @returns Promise<LoginResult> - 성공 시 accessToken 반환, 실패 시 에러 메시지
+     */
+    async function handleLoginSuccess(tokens: LoginTokens): Promise<LoginResult> {
+        try {
+            const { accessToken, refreshToken } = tokens;
+
+            if (!accessToken || !refreshToken) {
+                console.error('[handleLoginSuccess] 토큰이 누락되었습니다:', { accessToken: !!accessToken, refreshToken: !!refreshToken });
+                return {
+                    success: false,
+                    error: '토큰이 누락되었습니다.',
+                };
+            }
+
+            // RefreshToken을 HttpOnly 쿠키에 저장
+            const cookieSuccess = await setRefreshTokenCookie(refreshToken);
+
+            if (!cookieSuccess) {
+                console.error('[handleLoginSuccess] Refresh token 쿠키 저장 실패');
+                return {
+                    success: false,
+                    error: 'Refresh token 저장에 실패했습니다.',
+                };
+            }
+
+            console.log('[handleLoginSuccess] 로그인 토큰 처리 완료');
+
+            // AccessToken은 반환 (호출 측에서 Zustand store에 저장)
+            return {
+                success: true,
+                accessToken,
+            };
+        } catch (error) {
+            console.error('[handleLoginSuccess] 토큰 처리 중 에러:', error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : '알 수 없는 오류',
+            };
+        }
+    }
+
+    /**
+     * URL에서 토큰을 추출하는 함수 (OAuth 콜백 처리용)
+     * 
+     * @param url - 토큰이 포함된 URL (쿼리 파라미터 또는 해시)
+     * @returns LoginTokens | null - 추출된 토큰 또는 null
+     */
+    function extractTokensFromUrl(url?: string): LoginTokens | null {
+        try {
+            const targetUrl = url || window.location.href;
+            const urlObj = new URL(targetUrl);
+
+            // 쿼리 파라미터에서 토큰 추출
+            const accessToken = urlObj.searchParams.get('access_token') || urlObj.searchParams.get('accessToken');
+            const refreshToken = urlObj.searchParams.get('refresh_token') || urlObj.searchParams.get('refreshToken');
+
+            // 해시에서 토큰 추출 (fallback)
+            if (!accessToken || !refreshToken) {
+                const hash = urlObj.hash.substring(1); // '#' 제거
+                const hashParams = new URLSearchParams(hash);
+                const hashAccessToken = hashParams.get('access_token') || hashParams.get('accessToken');
+                const hashRefreshToken = hashParams.get('refresh_token') || hashParams.get('refreshToken');
+
+                if (hashAccessToken && hashRefreshToken) {
+                    return {
+                        accessToken: hashAccessToken,
+                        refreshToken: hashRefreshToken,
+                    };
+                }
+            }
+
+            if (accessToken && refreshToken) {
+                return {
+                    accessToken,
+                    refreshToken,
+                };
+            }
+
+            return null;
+        } catch (error) {
+            console.error('[extractTokensFromUrl] URL 파싱 에러:', error);
+            return null;
+        }
+    }
+
+    /**
+     * 로그아웃 처리 함수
+     * - AccessToken: Zustand store에서 삭제 (호출 측에서 처리)
+     * - RefreshToken: HttpOnly 쿠키에서 삭제
+     * 
+     * @returns Promise<boolean> - 성공 여부
+     */
+    async function handleLogout(): Promise<boolean> {
+        try {
+            // RefreshToken 쿠키 삭제
+            const cookieSuccess = await clearRefreshTokenCookie();
+
+            if (!cookieSuccess) {
+                console.error('[handleLogout] Refresh token 쿠키 삭제 실패');
+                return false;
+            }
+
+            // 백엔드 로그아웃 API 호출 (선택사항)
+            try {
+                await fetch(`${baseUrl}${authPath}/logout`, {
+                    method: 'POST',
+                    credentials: 'include', // 쿠키 포함
+                });
+            } catch (error) {
+                console.warn('[handleLogout] 백엔드 로그아웃 API 호출 실패 (무시):', error);
+            }
+
+            console.log('[handleLogout] 로그아웃 완료');
+            return true;
+        } catch (error) {
+            console.error('[handleLogout] 로그아웃 중 에러:', error);
+            return false;
+        }
+    }
+
     // 클로저를 통해 이너 함수들을 반환
     return {
         handleGoogleLogin,
@@ -174,9 +322,24 @@ const authService = (() => {
         handleNaverLogin,
         setRefreshTokenCookie,
         clearRefreshTokenCookie,
+        handleLoginSuccess,
+        extractTokensFromUrl,
+        handleLogout,
     };
 })();
 
 // 개별 함수 export (기존 코드와의 호환성 유지)
-export const { handleGoogleLogin, handleKakaoLogin, handleNaverLogin, setRefreshTokenCookie, clearRefreshTokenCookie } = authService;
+export const {
+    handleGoogleLogin,
+    handleKakaoLogin,
+    handleNaverLogin,
+    setRefreshTokenCookie,
+    clearRefreshTokenCookie,
+    handleLoginSuccess,
+    extractTokensFromUrl,
+    handleLogout,
+} = authService;
+
+// 타입 export
+export type { LoginTokens, LoginResult, LoginSuccessResult, LoginErrorResult };
 
